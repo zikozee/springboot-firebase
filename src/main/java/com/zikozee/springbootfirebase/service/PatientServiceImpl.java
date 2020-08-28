@@ -49,7 +49,6 @@ public class PatientServiceImpl implements PatientService{
         mDbFirestore = FirestoreClient.getFirestore();
         Iterable<DocumentReference> collections = mDbFirestore.collection(DB_NAME).listDocuments();
 
-
         List<Patient> patients = new ArrayList<>();
 
         collections.forEach(documentReference -> {
