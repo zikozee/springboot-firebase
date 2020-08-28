@@ -18,18 +18,18 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class PatientServiceImpl implements PatientService{
 
-    public static final String COL_NAME="users";
+    public static final String DB_NAME="users";
     private Firestore mDbFirestore;
 
     public String createPatient(Patient patient) throws InterruptedException, ExecutionException {
         mDbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(COL_NAME).document(patient.getName()).set(patient);
+        ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(DB_NAME).document(patient.getName()).set(patient);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
     public Patient getSinglePatientDetails(String name) throws InterruptedException, ExecutionException {
         mDbFirestore = FirestoreClient.getFirestore();
-        DocumentReference documentReference = mDbFirestore.collection(COL_NAME).document(name);
+        DocumentReference documentReference = mDbFirestore.collection(DB_NAME).document(name);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
         DocumentSnapshot document = future.get();
@@ -47,7 +47,7 @@ public class PatientServiceImpl implements PatientService{
     @Override
     public List<Patient> geAllPatients(){
         mDbFirestore = FirestoreClient.getFirestore();
-        Iterable<DocumentReference> collections = mDbFirestore.collection("users").listDocuments();
+        Iterable<DocumentReference> collections = mDbFirestore.collection(DB_NAME).listDocuments();
 
 
         List<Patient> patients = new ArrayList<>();
@@ -68,13 +68,13 @@ public class PatientServiceImpl implements PatientService{
 
     public String updatePatientDetails(Patient person) throws InterruptedException, ExecutionException {
         mDbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(COL_NAME).document(person.getName()).set(person);
+        ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(DB_NAME).document(person.getName()).set(person);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
     public String deletePatient(String name) {
         mDbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> writeResult = mDbFirestore.collection(COL_NAME).document(name).delete();
+        ApiFuture<WriteResult> writeResult = mDbFirestore.collection(DB_NAME).document(name).delete();
         if(writeResult.isDone()){
             log.info("Patient deleted");
         }
