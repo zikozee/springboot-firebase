@@ -1,10 +1,7 @@
 package com.zikozee.springbootfirebase.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.zikozee.springbootfirebase.model.Patient;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +19,17 @@ public class PatientServiceImpl implements PatientService{
     private Firestore mDbFirestore;
 
     public String createPatient(Patient patient) throws InterruptedException, ExecutionException {
-        mDbFirestore = FirestoreClient.getFirestore();
+        firebaseConnector();
         ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(DB_NAME).document(patient.getName()).set(patient);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public Patient getSinglePatientDetails(String name) throws InterruptedException, ExecutionException {
+    private void firebaseConnector() {
         mDbFirestore = FirestoreClient.getFirestore();
+    }
+
+    public Patient getSinglePatientDetails(String name) throws InterruptedException, ExecutionException {
+        firebaseConnector();
         DocumentReference documentReference = mDbFirestore.collection(DB_NAME).document(name);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
 
@@ -46,7 +47,7 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public List<Patient> geAllPatients(){
-        mDbFirestore = FirestoreClient.getFirestore();
+        firebaseConnector();
         Iterable<DocumentReference> collections = mDbFirestore.collection(DB_NAME).listDocuments();
 
         List<Patient> patients = new ArrayList<>();
@@ -65,14 +66,48 @@ public class PatientServiceImpl implements PatientService{
         return patients;
     }
 
+    @Override
+    public List<Patient> getPatientsWhereNameEquals(String value) throws ExecutionException, InterruptedException {
+        firebaseConnector();
+        CollectionReference patients = mDbFirestore.collection(DB_NAME);
+
+        Query query = patients.whereEqualTo("name", value);
+
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+        List<Patient> patientList = new ArrayList<>();
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            patientList.add(document.toObject(Patient.class));
+        }
+
+        return patientList;
+    }
+
+    @Override
+    public List<Patient> getPatientWhereAgeEquals(int age) throws ExecutionException, InterruptedException {
+        firebaseConnector();
+        CollectionReference patients = mDbFirestore.collection(DB_NAME);
+
+        Query query = patients.whereEqualTo("age", age);
+
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+
+        List<Patient> patientList = new ArrayList<>();
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            patientList.add(document.toObject(Patient.class));
+        }
+
+        return patientList;
+    }
+
     public String updatePatientDetails(Patient person) throws InterruptedException, ExecutionException {
-        mDbFirestore = FirestoreClient.getFirestore();
+        firebaseConnector();
         ApiFuture<WriteResult> collectionsApiFuture = mDbFirestore.collection(DB_NAME).document(person.getName()).set(person);
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
     public String deletePatient(String name) {
-        mDbFirestore = FirestoreClient.getFirestore();
+        firebaseConnector();
         ApiFuture<WriteResult> writeResult = mDbFirestore.collection(DB_NAME).document(name).delete();
         if(writeResult.isDone()){
             log.info("Patient deleted");

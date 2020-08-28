@@ -17,8 +17,18 @@ public class PatientController {
 
 
     @GetMapping("/getSinglePatient")
-    public Patient getPatient(@RequestParam String name ) throws InterruptedException, ExecutionException {
+    public Patient getPatient(@RequestParam String name) throws InterruptedException, ExecutionException {
         return patientService.getSinglePatientDetails(name);
+    }
+
+    @GetMapping("/getSinglePatient/name")
+    public List<Patient> getPatientWhereNameEquals(@RequestParam String name) throws InterruptedException, ExecutionException {
+        return patientService.getPatientsWhereNameEquals(name);
+    }
+
+    @GetMapping("/getSinglePatient/age")
+    public List<Patient> getPatient(@RequestParam int age) throws InterruptedException, ExecutionException {
+        return patientService.getPatientWhereAgeEquals(age);
     }
 
     @GetMapping("/patients")

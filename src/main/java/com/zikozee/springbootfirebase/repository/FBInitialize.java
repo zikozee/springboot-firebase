@@ -1,4 +1,4 @@
-package com.zikozee.springbootfirebase.service;
+package com.zikozee.springbootfirebase.repository;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

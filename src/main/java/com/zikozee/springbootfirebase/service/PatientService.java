@@ -13,6 +13,10 @@ public interface PatientService {
 
     List<Patient> geAllPatients() throws ExecutionException, InterruptedException;
 
+    List<Patient> getPatientsWhereNameEquals(String value) throws ExecutionException, InterruptedException;
+
+    List<Patient> getPatientWhereAgeEquals(int age) throws ExecutionException, InterruptedException;
+
     String updatePatientDetails(Patient person) throws InterruptedException, ExecutionException;
 
     String deletePatient(String name);
