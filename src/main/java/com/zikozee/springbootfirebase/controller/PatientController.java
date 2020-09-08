@@ -1,7 +1,11 @@
 package com.zikozee.springbootfirebase.controller;
 
 
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.zikozee.springbootfirebase.model.Patient;
+import com.zikozee.springbootfirebase.model.UserRecordDTO;
+import com.zikozee.springbootfirebase.service.AuthService;
 import com.zikozee.springbootfirebase.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class PatientController {
 
     private final PatientService patientService;
+    private final AuthService authService;
 
 
     @GetMapping("/getSinglePatient")
@@ -49,6 +54,11 @@ public class PatientController {
     @DeleteMapping("/deletePatient")
     public String deletePatient(@RequestParam String name){
         return patientService.deletePatient(name);
+    }
+
+    @PostMapping("/createUser")
+    public UserRecordDTO createUser(@RequestBody UserRecordDTO userRecordDTO) throws FirebaseAuthException {
+        return authService.createUser(userRecordDTO);
     }
 
 }

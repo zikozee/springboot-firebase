@@ -2,6 +2,8 @@ package com.zikozee.springbootfirebase.service;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
 import com.zikozee.springbootfirebase.model.Patient;
 import lombok.extern.slf4j.Slf4j;
